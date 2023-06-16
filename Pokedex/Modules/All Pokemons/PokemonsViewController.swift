@@ -13,9 +13,14 @@ final class PokemonsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        view.backgroundColor = .cyan
+        layout()
+        presenter?.getPokemons()
     }
     
+    private func layout() {
+        
+    }
 }
 
 extension PokemonsViewController: PokemonsViewProtocol {

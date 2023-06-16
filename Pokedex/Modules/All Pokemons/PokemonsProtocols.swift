@@ -12,12 +12,15 @@ protocol PokemonsViewProtocol {
 
 //Conforms Presenter, View -> Presenter, Interactor -> Presenter
 protocol PokemonsPresenterProtocol {
+    //View -> Presenter
+    func getPokemons()
     
+    //Interactor -> Presenter
 }
 
 //Conforms Interactor, Presenter -> Interactor
 protocol PokemonsInteractorProtocol {
-    
+    func getPokemons()
 }
 
 //Conforms Router, Presenter -> Router

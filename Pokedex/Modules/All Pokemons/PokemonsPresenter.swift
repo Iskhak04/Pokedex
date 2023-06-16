@@ -15,4 +15,8 @@ final class PokemonsPresenter {
 
 extension PokemonsPresenter: PokemonsPresenterProtocol {
     
+    func getPokemons() {
+        interactor?.getPokemons()
+    }
+    
 }
