@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let window = UIWindow(windowScene: windowScene)
         
-        window.rootViewController = PokemonsModuleBuilder().build()
+        window.rootViewController = UINavigationController(rootViewController: PokemonsModuleBuilder().build())
         window.makeKeyAndVisible()
         
         self.window = window
