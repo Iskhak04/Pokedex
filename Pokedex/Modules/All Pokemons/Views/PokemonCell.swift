@@ -20,7 +20,7 @@ final class PokemonCell: UICollectionViewCell {
     lazy var pokemonIdLabel: UILabel = {
         let view = UILabel()
         view.text = "#001"
-        view.textColor = Constants.shared.pokemonCardIdColor
+        view.textColor = Constants.shared.pokemonCardGrassIdColor
         view.font = Constants.shared.pokemonCardIdLabelFont
         return view
     }()

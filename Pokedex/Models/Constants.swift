@@ -19,10 +19,26 @@ final class Constants {
     let pokemonCardIdLabelFont = UIFont(name: Fonts.robotoBold.rawValue, size: 18)
     
     
+    
+    //Grass
     let pokemonCardGrassColor = UIColor(hex: "#72CDB1")
     let pokemonTypeGrassColor = UIColor(hex: "#85DDCA")
-    let pokemonCardIdColor = UIColor(hex: "#58a38c")
+    let pokemonCardGrassIdColor = UIColor(hex: "#58a38c")
     
+    //Fire
+    let pokemonCardFireColor = UIColor(hex: "#EA7571")
+    let pokemonTypeFireColor = UIColor(hex: "#EA918F")
+    let pokemonCardFireIdColor = UIColor(hex: "#a34c4b")
+    
+    //Water
+    let pokemonCardWaterColor = UIColor(hex: "#87BCF8")
+    let pokemonTypeWaterColor = UIColor(hex: "#9FCEFB")
+    let pokemonCardWaterIdColor = UIColor(hex: "#5579a3")
+    
+    //Electric
+    let pokemonCardElectricColor = UIColor(hex: "#F9D87F")
+    let pokemonTypeElectricColor = UIColor(hex: "#FBE78D")
+    let pokemonCardElectricIdColor = UIColor(hex: "#a38d52")
     
     private init() {}
 }

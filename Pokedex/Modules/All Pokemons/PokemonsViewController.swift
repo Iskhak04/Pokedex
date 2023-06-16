@@ -12,6 +12,9 @@ import Hex
 final class PokemonsViewController: UIViewController {
     
     var presenter: PokemonsPresenterProtocol?
+    private var offset = 0
+    private var limit = 30
+    private var allFetchedPokemons: [PokemonViewModel] = []
     
     private lazy var pokemonsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -29,7 +32,7 @@ final class PokemonsViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
         layout()
-        presenter?.getPokemons()
+        presenter?.getPokemons(offset: offset, limit: limit)
     }
     
     private func layout() {
@@ -45,18 +48,62 @@ final class PokemonsViewController: UIViewController {
 
 extension PokemonsViewController: PokemonsViewProtocol {
     
+    func fetchedPokemons(allPokemons: [PokemonViewModel]) {
+        allFetchedPokemons = allPokemons
+        
+        DispatchQueue.main.async {
+            self.pokemonsCollectionView.reloadData()
+        }
+        
+    }
+    
 }
 
 extension PokemonsViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 20
+        return allFetchedPokemons.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = pokemonsCollectionView.dequeueReusableCell(withReuseIdentifier: "PokemonCell", for: indexPath) as! PokemonCell
         cell.backgroundColor = Constants.shared.pokemonCardGrassColor
         cell.layer.cornerRadius = 15
+        cell.pokemonNameLabel.text = allFetchedPokemons[indexPath.row].name.capitalized
+        cell.pokemonIdLabel.text = String(format: "%04d", allFetchedPokemons[indexPath.row].id)
+        cell.pokemonImageView.image = allFetchedPokemons[indexPath.row].image
+        
+        switch allFetchedPokemons[indexPath.row].mainType {
+        case .electric:
+            cell.backgroundColor = Constants.shared.pokemonCardElectricColor
+            cell.pokemonFirstTypeButton.backgroundColor = Constants.shared.pokemonTypeElectricColor
+            cell.pokemonSecondTypeButton.backgroundColor = Constants.shared.pokemonTypeElectricColor
+            cell.pokemonIdLabel.textColor = Constants.shared.pokemonCardElectricIdColor
+        case .grass:
+            cell.backgroundColor = Constants.shared.pokemonCardGrassColor
+            cell.pokemonFirstTypeButton.backgroundColor = Constants.shared.pokemonTypeGrassColor
+            cell.pokemonSecondTypeButton.backgroundColor = Constants.shared.pokemonTypeGrassColor
+            cell.pokemonIdLabel.textColor = Constants.shared.pokemonCardGrassIdColor
+        case .water:
+            cell.backgroundColor = Constants.shared.pokemonCardWaterColor
+            cell.pokemonFirstTypeButton.backgroundColor = Constants.shared.pokemonTypeWaterColor
+            cell.pokemonSecondTypeButton.backgroundColor = Constants.shared.pokemonTypeWaterColor
+            cell.pokemonIdLabel.textColor = Constants.shared.pokemonCardWaterIdColor
+        case .fire:
+            cell.backgroundColor = Constants.shared.pokemonCardFireColor
+            cell.pokemonFirstTypeButton.backgroundColor = Constants.shared.pokemonTypeFireColor
+            cell.pokemonSecondTypeButton.backgroundColor = Constants.shared.pokemonTypeFireColor
+            cell.pokemonIdLabel.textColor = Constants.shared.pokemonCardFireIdColor
+        }
+        
+        if allFetchedPokemons[indexPath.row].types.count == 1 {
+            cell.pokemonFirstTypeButton.setTitle(allFetchedPokemons[indexPath.row].types[0].capitalized, for: .normal)
+            cell.pokemonSecondTypeButton.isHidden = true
+        } else {
+            cell.pokemonFirstTypeButton.setTitle(allFetchedPokemons[indexPath.row].types[0].capitalized, for: .normal)
+            cell.pokemonSecondTypeButton.setTitle(allFetchedPokemons[indexPath.row].types[1].capitalized, for: .normal)
+        }
+        
         return cell
     }
     
