@@ -30,7 +30,7 @@ extension PokemonsInteractor: PokemonsInteractorProtocol {
                     for i in 0..<allPokemonsModel.results.count {
                         let pokemon = try await fetchSinglePokemon(urlString: allPokemonsModel.results[i].url)
                         
-                        guard let imageString = pokemon.sprites.other.home.frontDefault else { return }
+                        guard let imageString = pokemon.sprites.other.dreamWorld.frontDefault else { return }
                         
                         let image = try await downloadImage(imageString: imageString)
                         

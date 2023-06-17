@@ -7,7 +7,7 @@
 
 struct PokemonModel: Codable {
     let abilities: [AbilityModule]
-    let baseExperience: Int
+    let baseExperience: Int?
     let forms: [Forms]
     let gameIndices: [GameIndices]
     let height: Int

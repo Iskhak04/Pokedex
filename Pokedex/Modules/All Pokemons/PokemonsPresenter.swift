@@ -33,6 +33,38 @@ extension PokemonsPresenter: PokemonsPresenterProtocol {
                 mainType = .water
             case "electric":
                 mainType = .electric
+            case "normal":
+                mainType = .normal
+            case "ice":
+                mainType = .ice
+            case "fighting":
+                mainType = .fighting
+            case "poison":
+                mainType = .poison
+            case "ground":
+                mainType = .ground
+            case "flying":
+                mainType = .flying
+            case "psychic":
+                mainType = .psychic
+            case "bug":
+                mainType = .bug
+            case "rock":
+                mainType = .rock
+            case "ghost":
+                mainType = .ghost
+            case "dragon":
+                mainType = .dragon
+            case "dark":
+                mainType = .dark
+            case "steel":
+                mainType = .steel
+            case "fairy":
+                mainType = .fairy
+            case "unknown":
+                mainType = .unknown
+            case "shadow":
+                mainType = .shadow
             default:
                 ()
             }
@@ -44,6 +76,7 @@ extension PokemonsPresenter: PokemonsPresenterProtocol {
             allFetchedPokemons.append(PokemonViewModel(name: allPokemons[i].name, id: allPokemons[i].id, mainType: mainType, types: types, image: allImages[i]))
             
         }
+        
         view?.fetchedPokemons(allPokemons: allFetchedPokemons)
     }
     
