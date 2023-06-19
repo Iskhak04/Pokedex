@@ -12,5 +12,5 @@ struct PokemonViewModel {
     let id: Int
     let mainType: PokemonTypes
     let types: [String]
-    let image: UIImage
+    let imageView: UIImageView
 }

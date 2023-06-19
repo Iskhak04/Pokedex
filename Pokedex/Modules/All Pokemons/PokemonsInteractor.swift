@@ -24,17 +24,19 @@ extension PokemonsInteractor: PokemonsInteractorProtocol {
 
             Task {
                 var allPokemons: [PokemonModel] = []
-                var allImages: [UIImage] = []
+                var allImages: [UIImageView] = []
                 
                 do {
                     for i in 0..<allPokemonsModel.results.count {
                         let pokemon = try await fetchSinglePokemon(urlString: allPokemonsModel.results[i].url)
                         
-                        guard let imageString = pokemon.sprites.other.dreamWorld.frontDefault else { return }
+                        guard let svgImageString = pokemon.sprites.other.dreamWorld.frontDefault else { return }
                         
-                        let image = try await downloadImage(imageString: imageString)
                         
-                        allImages.append(image)
+                        downloadSvg(svgString: svgImageString, completion: { imageV in
+                            allImages.append(imageV)
+                        })
+                        
                         allPokemons.append(pokemon)
                     }
                     
@@ -75,6 +77,17 @@ private func fetchAllPokemons(offset: Int, limit: Int, completion: @escaping (Al
         
         completion(pokemons)
     }
+}
+
+private func downloadSvg(svgString: String, completion: @escaping (UIImageView) -> Void) {
+    
+    guard let svgUrl = URL(string: svgString) else { return }
+    
+    let imageView = UIImageView(SVGURL: svgUrl) { (svgLayer) in
+        svgLayer.resizeToFit(CGRect(x: 0, y: 0, width: 80, height: 80))
+    }
+    
+    completion(imageView)
 }
 
 private func downloadImage(imageString: String) async throws -> UIImage {

@@ -9,5 +9,7 @@ target 'Pokedex' do
 	pod 'SnapKit'
 	pod 'Alamofire'
 	pod 'Hex'
+	pod 'SDWebImageSVGKitPlugin'
+	pod 'SwiftSVG', '~> 2.0'
 
 end

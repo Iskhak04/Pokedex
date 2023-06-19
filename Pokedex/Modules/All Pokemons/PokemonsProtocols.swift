@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftSVG
 
 //Conforms View, Presenter -> View
 protocol PokemonsViewProtocol {
@@ -16,9 +17,10 @@ protocol PokemonsViewProtocol {
 protocol PokemonsPresenterProtocol {
     //View -> Presenter
     func getPokemons(offset: Int, limit: Int)
+    func goToDetailedPage()
     
     //Interactor -> Presenter
-    func fetchedPokemons(allPokemons: [PokemonModel], allImages: [UIImage])
+    func fetchedPokemons(allPokemons: [PokemonModel], allImages: [UIImageView])
 }
 
 //Conforms Interactor, Presenter -> Interactor
@@ -28,5 +30,6 @@ protocol PokemonsInteractorProtocol {
 
 //Conforms Router, Presenter -> Router
 protocol PokemonsRouterProtocol {
+    func goToDetailedPage()
     
 }

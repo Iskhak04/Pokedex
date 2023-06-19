@@ -8,12 +8,13 @@
 import UIKit
 import SnapKit
 import Hex
+import SwiftSVG
 
 final class PokemonsViewController: UIViewController {
     
     var presenter: PokemonsPresenterProtocol?
     private var offset = 0
-    private var limit = 12
+    private var limit = 3
     private let maxOffset = 1271
     private var allFetchedPokemons: [PokemonViewModel] = []
     
@@ -23,6 +24,12 @@ final class PokemonsViewController: UIViewController {
         view.delegate = self
         view.dataSource = self
         view.register(PokemonCell.self, forCellWithReuseIdentifier: "PokemonCell")
+        return view
+    }()
+    
+    private lazy var testImageView: UIImageView = {
+        let view = UIImageView()
+        view.backgroundColor = .cyan
         return view
     }()
     
@@ -45,6 +52,7 @@ final class PokemonsViewController: UIViewController {
         navigationItem.title = "Pokedex"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
+        
         layout()
         presenter?.getPokemons(offset: offset, limit: limit)
         offset += limit
@@ -56,6 +64,7 @@ final class PokemonsViewController: UIViewController {
     }
     
     private func layout() {
+        
         view.addSubview(pokemonsCollectionView)
         pokemonsCollectionView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(0)
@@ -72,17 +81,20 @@ final class PokemonsViewController: UIViewController {
 }
 
 extension PokemonsViewController: PokemonsViewProtocol {
+    func sendSVG(imageView: UIImageView) {
+        testImageView = imageView
+    }
     
     func fetchedPokemons(allPokemons: [PokemonViewModel]) {
         allFetchedPokemons += allPokemons
-        allFetchedPokemons.sort { pokemon1, pokemon2 in
-            if pokemon2.id > pokemon1.id {
-                return true
-            }
-            
-            return false
-        }
-        loadNewPokemons()
+//        allFetchedPokemons.sort { pokemon1, pokemon2 in
+//            if pokemon2.id > pokemon1.id {
+//                return true
+//            }
+//
+//            return false
+//        }
+        //loadNewPokemons()
         DispatchQueue.main.async {
             self.pokemonsCollectionView.reloadData()
             self.spinnerView.stopAnimating()
@@ -104,7 +116,18 @@ extension PokemonsViewController: UICollectionViewDataSource, UICollectionViewDe
         cell.layer.cornerRadius = 15
         cell.pokemonNameLabel.text = allFetchedPokemons[indexPath.row].name.capitalized
         cell.pokemonIdLabel.text = String(format: "#%04d", allFetchedPokemons[indexPath.row].id)
-        cell.pokemonImageView.image = allFetchedPokemons[indexPath.row].image
+        
+        
+        cell.pokemonImageView = allFetchedPokemons[indexPath.row].imageView
+        let hideView = UIView()
+        hideView.backgroundColor = Constants.shared.defineBackgroundColor(type: allFetchedPokemons[indexPath.row].mainType).0
+        cell.addSubview(hideView)
+        hideView.snp.makeConstraints { make in
+            make.bottom.equalToSuperview().offset(-15)
+            make.right.equalToSuperview().offset(-10)
+            make.height.equalTo(85)
+            make.width.equalTo(85)
+        }
         
         if allFetchedPokemons[indexPath.row].types.count == 1 {
             cell.pokemonSecondTypeButton.isHidden = true
@@ -137,6 +160,10 @@ extension PokemonsViewController: UICollectionViewDataSource, UICollectionViewDe
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        presenter?.goToDetailedPage()
     }
     
 }

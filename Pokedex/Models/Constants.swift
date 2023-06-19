@@ -18,6 +18,14 @@ final class Constants {
     let pokemonCardTypeButtonFont = UIFont(name: Fonts.robotoMedium.rawValue, size: 14)
     let pokemonCardIdLabelFont = UIFont(name: Fonts.robotoBold.rawValue, size: 18)
     
+    let detailedPokemonCardNameLabelFont = UIFont(name: Fonts.robotoBold.rawValue, size: 35)
+    let detailedPokemonCardTypeButtonFont = UIFont(name: Fonts.robotoMedium.rawValue, size: 17)
+    let detailedPokemonCardIdLabelFont = UIFont(name: Fonts.robotoBold.rawValue, size: 25)
+    
+    let detailedPokemonCardStatLabelFont = UIFont(name: Fonts.robotoMedium.rawValue, size: 17)
+    let detailedPokemonCardHeaderLabelFont = UIFont(name: Fonts.robotoBold.rawValue, size: 18)
+    
+    let detailedPokemonCardStatLabelColor = UIColor(hex: "#b9bbbd")
     
     
     //Grass

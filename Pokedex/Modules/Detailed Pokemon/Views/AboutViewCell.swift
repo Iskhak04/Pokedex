@@ -1,0 +1,233 @@
+//
+//  AboutViewCell.swift
+//  Pokedex
+//
+//  Created by Iskhak Zhutanov on 19.06.23.
+//
+
+import UIKit
+
+final class AboutViewCell: UICollectionViewCell {
+    
+    lazy var speciesWordLabel: UILabel = {
+        let view = UILabel()
+        view.text = "Species"
+        view.font = Constants.shared.detailedPokemonCardStatLabelFont
+        view.textColor = Constants.shared.detailedPokemonCardStatLabelColor
+        return view
+    }()
+    
+    lazy var speciesLabel: UILabel = {
+        let view = UILabel()
+        view.text = "Seed"
+        view.font = Constants.shared.detailedPokemonCardStatLabelFont
+        view.textColor = .black
+        return view
+    }()
+    
+    lazy var heightWordLabel: UILabel = {
+        let view = UILabel()
+        view.text = "Height"
+        view.font = Constants.shared.detailedPokemonCardStatLabelFont
+        view.textColor = Constants.shared.detailedPokemonCardStatLabelColor
+        return view
+    }()
+    
+    lazy var heightLabel: UILabel = {
+        let view = UILabel()
+        view.text = "2'3,6\"(0.70 cm)"
+        view.font = Constants.shared.detailedPokemonCardStatLabelFont
+        view.textColor = .black
+        return view
+    }()
+    
+    lazy var weightWordLabel: UILabel = {
+        let view = UILabel()
+        view.text = "Weight"
+        view.font = Constants.shared.detailedPokemonCardStatLabelFont
+        view.textColor = Constants.shared.detailedPokemonCardStatLabelColor
+        return view
+    }()
+    
+    lazy var weightLabel: UILabel = {
+        let view = UILabel()
+        view.text = "15.2 lbs (6.9 kg)"
+        view.font = Constants.shared.detailedPokemonCardStatLabelFont
+        view.textColor = .black
+        return view
+    }()
+    
+    lazy var abilitiesWordLabel: UILabel = {
+        let view = UILabel()
+        view.text = "Abilities"
+        view.font = Constants.shared.detailedPokemonCardStatLabelFont
+        view.textColor = Constants.shared.detailedPokemonCardStatLabelColor
+        return view
+    }()
+    
+    lazy var abilitiesLabel: UILabel = {
+        let view = UILabel()
+        view.text = "Overgrow, Chlorophyl"
+        view.font = Constants.shared.detailedPokemonCardStatLabelFont
+        view.textColor = .black
+        return view
+    }()
+    
+    lazy var breedingWordLabel: UILabel = {
+        let view = UILabel()
+        view.text = "Breeding"
+        view.font = Constants.shared.detailedPokemonCardHeaderLabelFont
+        view.textColor = .black
+        return view
+    }()
+    
+    lazy var genderWordLabel: UILabel = {
+        let view = UILabel()
+        view.text = "Gender"
+        view.font = Constants.shared.detailedPokemonCardStatLabelFont
+        view.textColor = Constants.shared.detailedPokemonCardStatLabelColor
+        return view
+    }()
+    
+    lazy var genderLabel: UILabel = {
+        let view = UILabel()
+        view.text = "87.5% 12.5%"
+        view.font = Constants.shared.detailedPokemonCardStatLabelFont
+        view.textColor = .black
+        return view
+    }()
+    
+    lazy var eggGroupsWordLabel: UILabel = {
+        let view = UILabel()
+        view.text = "Egg Groups"
+        view.font = Constants.shared.detailedPokemonCardStatLabelFont
+        view.textColor = Constants.shared.detailedPokemonCardStatLabelColor
+        return view
+    }()
+    
+    lazy var eggGroupsLabel: UILabel = {
+        let view = UILabel()
+        view.text = "Monster"
+        view.font = Constants.shared.detailedPokemonCardStatLabelFont
+        view.textColor = .black
+        return view
+    }()
+    
+    lazy var eggCycleWordLabel: UILabel = {
+        let view = UILabel()
+        view.text = "Egg Cycle"
+        view.font = Constants.shared.detailedPokemonCardStatLabelFont
+        view.textColor = Constants.shared.detailedPokemonCardStatLabelColor
+        return view
+    }()
+    
+    lazy var eggCycleLabel: UILabel = {
+        let view = UILabel()
+        view.text = "Grass"
+        view.font = Constants.shared.detailedPokemonCardStatLabelFont
+        view.textColor = .black
+        return view
+    }()
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        addSubview(speciesWordLabel)
+        speciesWordLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(15)
+            make.left.equalToSuperview().offset(Constants.shared.sideOffset)
+            make.width.equalTo(88)
+        }
+        
+        addSubview(speciesLabel)
+        speciesLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(15)
+            make.left.equalTo(speciesWordLabel.snp.right).offset(40)
+        }
+        
+        addSubview(heightWordLabel)
+        heightWordLabel.snp.makeConstraints { make in
+            make.top.equalTo(speciesLabel.snp.bottom).offset(15)
+            make.left.equalToSuperview().offset(Constants.shared.sideOffset)
+            make.width.equalTo(88)
+        }
+        
+        addSubview(heightLabel)
+        heightLabel.snp.makeConstraints { make in
+            make.top.equalTo(speciesLabel.snp.bottom).offset(15)
+            make.left.equalTo(heightWordLabel.snp.right).offset(40)
+        }
+        
+        addSubview(weightWordLabel)
+        weightWordLabel.snp.makeConstraints { make in
+            make.top.equalTo(heightLabel.snp.bottom).offset(15)
+            make.left.equalToSuperview().offset(Constants.shared.sideOffset)
+            make.width.equalTo(88)
+        }
+        
+        addSubview(weightLabel)
+        weightLabel.snp.makeConstraints { make in
+            make.top.equalTo(heightLabel.snp.bottom).offset(15)
+            make.left.equalTo(weightWordLabel.snp.right).offset(40)
+        }
+        
+        addSubview(abilitiesWordLabel)
+        abilitiesWordLabel.snp.makeConstraints { make in
+            make.top.equalTo(weightLabel.snp.bottom).offset(15)
+            make.left.equalToSuperview().offset(Constants.shared.sideOffset)
+            make.width.equalTo(88)
+        }
+        
+        addSubview(abilitiesLabel)
+        abilitiesLabel.snp.makeConstraints { make in
+            make.top.equalTo(weightLabel.snp.bottom).offset(15)
+            make.left.equalTo(abilitiesWordLabel.snp.right).offset(40)
+        }
+        
+        addSubview(breedingWordLabel)
+        breedingWordLabel.snp.makeConstraints { make in
+            make.top.equalTo(abilitiesLabel.snp.bottom).offset(25)
+            make.left.equalToSuperview().offset(Constants.shared.sideOffset)
+        }
+        
+        addSubview(genderWordLabel)
+        genderWordLabel.snp.makeConstraints { make in
+            make.top.equalTo(breedingWordLabel.snp.bottom).offset(20)
+            make.left.equalToSuperview().offset(Constants.shared.sideOffset)
+            make.width.equalTo(88)
+        }
+        
+        addSubview(genderLabel)
+        genderLabel.snp.makeConstraints { make in
+            make.top.equalTo(breedingWordLabel.snp.bottom).offset(20)
+            make.left.equalTo(genderWordLabel.snp.right).offset(40)
+        }
+        
+        addSubview(eggGroupsWordLabel)
+        eggGroupsWordLabel.snp.makeConstraints { make in
+            make.top.equalTo(genderLabel.snp.bottom).offset(15)
+            make.left.equalToSuperview().offset(Constants.shared.sideOffset)
+            make.width.equalTo(88)
+        }
+        
+        addSubview(eggGroupsLabel)
+        eggGroupsLabel.snp.makeConstraints { make in
+            make.top.equalTo(genderLabel.snp.bottom).offset(15)
+            make.left.equalTo(eggGroupsWordLabel.snp.right).offset(40)
+        }
+        
+        addSubview(eggCycleWordLabel)
+        eggCycleWordLabel.snp.makeConstraints { make in
+            make.top.equalTo(eggGroupsLabel.snp.bottom).offset(15)
+            make.left.equalToSuperview().offset(Constants.shared.sideOffset)
+            make.width.equalTo(88)
+        }
+        
+        addSubview(eggCycleLabel)
+        eggCycleLabel.snp.makeConstraints { make in
+            make.top.equalTo(eggGroupsLabel.snp.bottom).offset(15)
+            make.left.equalTo(eggCycleWordLabel.snp.right).offset(40)
+        }
+        
+    }
+}

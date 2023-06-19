@@ -17,7 +17,11 @@ final class PokemonsPresenter {
 
 extension PokemonsPresenter: PokemonsPresenterProtocol {
     
-    func fetchedPokemons(allPokemons: [PokemonModel], allImages: [UIImage]) {
+    func goToDetailedPage() {
+        router?.goToDetailedPage()
+    }
+    
+    func fetchedPokemons(allPokemons: [PokemonModel], allImages: [UIImageView]) {
         var allFetchedPokemons: [PokemonViewModel] = []
         
         for i in 0..<allPokemons.count {
@@ -73,7 +77,7 @@ extension PokemonsPresenter: PokemonsPresenterProtocol {
                 types.append(allPokemons[i].types[j].type.name)
             }
             
-            allFetchedPokemons.append(PokemonViewModel(name: allPokemons[i].name, id: allPokemons[i].id, mainType: mainType, types: types, image: allImages[i]))
+            allFetchedPokemons.append(PokemonViewModel(name: allPokemons[i].name, id: allPokemons[i].id, mainType: mainType, types: types, imageView: allImages[i]))
             
         }
         
