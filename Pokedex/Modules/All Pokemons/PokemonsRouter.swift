@@ -15,8 +15,8 @@ final class PokemonsRouter {
 
 extension PokemonsRouter: PokemonsRouterProtocol {
     
-    func goToDetailedPage() {
-        viewController?.navigationController?.pushViewController(DetailedPokemonModuleBuilder().build(), animated: true)
+    func goToDetailedPage(pokemonUrlString: String, mainType: PokemonTypes) {
+        viewController?.navigationController?.pushViewController(DetailedPokemonModuleBuilder().build(pokemonUrlString: pokemonUrlString, mainType: mainType), animated: true)
     }
     
 }

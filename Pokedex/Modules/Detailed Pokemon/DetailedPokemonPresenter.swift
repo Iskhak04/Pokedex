@@ -5,6 +5,8 @@
 //  Created by Iskhak Zhutanov on 17.06.23.
 //
 
+import UIKit
+
 final class DetailedPokemonPresenter {
     
     var view: DetailedPokemonViewProtocol?
@@ -14,5 +16,13 @@ final class DetailedPokemonPresenter {
 }
 
 extension DetailedPokemonPresenter: DetailedPokemonPresenterProtocol {
+    
+    func fetchedPokemon(pokemon: PokemonModel, svgImageView: UIImageView) {
+        view?.fetchedPokemon(pokemon: pokemon, svgImageView: svgImageView)
+    }
+    
+    func getPokemon(pokemonUrlString: String, imageWidth: Double, imageHeight: Double) {
+        interactor?.getPokemon(pokemonUrlString: pokemonUrlString, imageWidth: imageWidth, imageHeight: imageHeight)
+    }
     
 }

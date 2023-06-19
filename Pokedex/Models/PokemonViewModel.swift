@@ -10,6 +10,7 @@ import UIKit
 struct PokemonViewModel {
     let name: String
     let id: Int
+    let url: String
     let mainType: PokemonTypes
     let types: [String]
     let imageView: UIImageView

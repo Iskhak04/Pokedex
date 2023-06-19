@@ -14,9 +14,12 @@ final class PokemonsViewController: UIViewController {
     
     var presenter: PokemonsPresenterProtocol?
     private var offset = 0
-    private var limit = 3
+    private var limit = 10
     private let maxOffset = 1271
     private var allFetchedPokemons: [PokemonViewModel] = []
+    private var filteredPokemons: [PokemonViewModel] = []
+    var imageWidth: Double = 80
+    var imageHeight: Double = 80
     
     private lazy var pokemonsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -45,6 +48,12 @@ final class PokemonsViewController: UIViewController {
         return view
     }()
     
+    private lazy var searchBar: UISearchBar = {
+        let view = UISearchBar()
+        view.delegate = self
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         spinnerView.startAnimating()
@@ -52,14 +61,19 @@ final class PokemonsViewController: UIViewController {
         navigationItem.title = "Pokedex"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
+        searchBar.searchBarStyle = UISearchBar.Style.default
+        searchBar.placeholder = " Search..."
+        searchBar.sizeToFit()
+        searchBar.isTranslucent = false
+        navigationItem.titleView = searchBar
         
         layout()
-        presenter?.getPokemons(offset: offset, limit: limit)
+        presenter?.getPokemons(offset: offset, limit: limit, imageWidth: imageWidth, imageHeight: imageHeight)
         offset += limit
     }
     
     @objc private func loadNewPokemons() {
-        presenter?.getPokemons(offset: offset, limit: limit)
+        presenter?.getPokemons(offset: offset, limit: limit, imageWidth: imageWidth, imageHeight: imageHeight)
         offset += limit
     }
     
@@ -87,6 +101,7 @@ extension PokemonsViewController: PokemonsViewProtocol {
     
     func fetchedPokemons(allPokemons: [PokemonViewModel]) {
         allFetchedPokemons += allPokemons
+        filteredPokemons += allPokemons
 //        allFetchedPokemons.sort { pokemon1, pokemon2 in
 //            if pokemon2.id > pokemon1.id {
 //                return true
@@ -104,23 +119,31 @@ extension PokemonsViewController: PokemonsViewProtocol {
     
 }
 
-extension PokemonsViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension PokemonsViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filteredPokemons = searchText.isEmpty ? allFetchedPokemons : allFetchedPokemons.filter({ poke in
+            return poke.name.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
+        })
+        
+        pokemonsCollectionView.reloadData()
+    }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return allFetchedPokemons.count
+        return filteredPokemons.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = pokemonsCollectionView.dequeueReusableCell(withReuseIdentifier: "PokemonCell", for: indexPath) as! PokemonCell
         
         cell.layer.cornerRadius = 15
-        cell.pokemonNameLabel.text = allFetchedPokemons[indexPath.row].name.capitalized
-        cell.pokemonIdLabel.text = String(format: "#%04d", allFetchedPokemons[indexPath.row].id)
+        cell.pokemonNameLabel.text = filteredPokemons[indexPath.row].name.capitalized
+        cell.pokemonIdLabel.text = String(format: "#%04d", filteredPokemons[indexPath.row].id)
         
         
-        cell.pokemonImageView = allFetchedPokemons[indexPath.row].imageView
+        cell.pokemonImageView = filteredPokemons[indexPath.row].imageView
         let hideView = UIView()
-        hideView.backgroundColor = Constants.shared.defineBackgroundColor(type: allFetchedPokemons[indexPath.row].mainType).0
+        hideView.backgroundColor = Constants.shared.defineBackgroundColor(type: filteredPokemons[indexPath.row].mainType).0
         cell.addSubview(hideView)
         hideView.snp.makeConstraints { make in
             make.bottom.equalToSuperview().offset(-15)
@@ -129,27 +152,27 @@ extension PokemonsViewController: UICollectionViewDataSource, UICollectionViewDe
             make.width.equalTo(85)
         }
         
-        if allFetchedPokemons[indexPath.row].types.count == 1 {
+        if filteredPokemons[indexPath.row].types.count == 1 {
             cell.pokemonSecondTypeButton.isHidden = true
-            cell.pokemonFirstTypeButton.setTitle(allFetchedPokemons[indexPath.row].types[0].capitalized, for: .normal)
-            cell.pokemonFirstTypeButton.backgroundColor = Constants.shared.defineBackgroundColor(type: allFetchedPokemons[indexPath.row].mainType).1
+            cell.pokemonFirstTypeButton.setTitle(filteredPokemons[indexPath.row].types[0].capitalized, for: .normal)
+            cell.pokemonFirstTypeButton.backgroundColor = Constants.shared.defineBackgroundColor(type: filteredPokemons[indexPath.row].mainType).1
         } else {
             cell.pokemonSecondTypeButton.isHidden = false
-            cell.pokemonFirstTypeButton.setTitle(allFetchedPokemons[indexPath.row].types[0].capitalized, for: .normal)
-            cell.pokemonSecondTypeButton.setTitle(allFetchedPokemons[indexPath.row].types[1].capitalized, for: .normal)
-            cell.pokemonFirstTypeButton.backgroundColor = Constants.shared.defineBackgroundColor(type: allFetchedPokemons[indexPath.row].mainType).1
-            cell.pokemonSecondTypeButton.backgroundColor = Constants.shared.defineBackgroundColor(type: allFetchedPokemons[indexPath.row].mainType).1
+            cell.pokemonFirstTypeButton.setTitle(filteredPokemons[indexPath.row].types[0].capitalized, for: .normal)
+            cell.pokemonSecondTypeButton.setTitle(filteredPokemons[indexPath.row].types[1].capitalized, for: .normal)
+            cell.pokemonFirstTypeButton.backgroundColor = Constants.shared.defineBackgroundColor(type: filteredPokemons[indexPath.row].mainType).1
+            cell.pokemonSecondTypeButton.backgroundColor = Constants.shared.defineBackgroundColor(type: filteredPokemons[indexPath.row].mainType).1
         }
         
-        cell.backgroundColor = Constants.shared.defineBackgroundColor(type: allFetchedPokemons[indexPath.row].mainType).0
-        cell.pokemonIdLabel.textColor = Constants.shared.defineBackgroundColor(type: allFetchedPokemons[indexPath.row].mainType).2
+        cell.backgroundColor = Constants.shared.defineBackgroundColor(type: filteredPokemons[indexPath.row].mainType).0
+        cell.pokemonIdLabel.textColor = Constants.shared.defineBackgroundColor(type: filteredPokemons[indexPath.row].mainType).2
         
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.item == allFetchedPokemons.count - 1, offset < maxOffset {
+        if indexPath.item == filteredPokemons.count - 1, offset < maxOffset {
             loadNewPokemons()
         }
     }
@@ -163,7 +186,7 @@ extension PokemonsViewController: UICollectionViewDataSource, UICollectionViewDe
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        presenter?.goToDetailedPage()
+        presenter?.goToDetailedPage(pokemonUrlString: filteredPokemons[indexPath.row].url, mainType: filteredPokemons[indexPath.row].mainType)
     }
     
 }

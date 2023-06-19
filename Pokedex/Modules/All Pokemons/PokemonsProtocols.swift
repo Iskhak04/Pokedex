@@ -16,8 +16,8 @@ protocol PokemonsViewProtocol {
 //Conforms Presenter, View -> Presenter, Interactor -> Presenter
 protocol PokemonsPresenterProtocol {
     //View -> Presenter
-    func getPokemons(offset: Int, limit: Int)
-    func goToDetailedPage()
+    func getPokemons(offset: Int, limit: Int, imageWidth: Double, imageHeight: Double)
+    func goToDetailedPage(pokemonUrlString: String, mainType: PokemonTypes)
     
     //Interactor -> Presenter
     func fetchedPokemons(allPokemons: [PokemonModel], allImages: [UIImageView])
@@ -25,11 +25,11 @@ protocol PokemonsPresenterProtocol {
 
 //Conforms Interactor, Presenter -> Interactor
 protocol PokemonsInteractorProtocol {
-    func getPokemons(offset: Int, limit: Int)
+    func getPokemons(offset: Int, limit: Int, imageWidth: Double, imageHeight: Double)
 }
 
 //Conforms Router, Presenter -> Router
 protocol PokemonsRouterProtocol {
-    func goToDetailedPage()
+    func goToDetailedPage(pokemonUrlString: String, mainType: PokemonTypes)
     
 }

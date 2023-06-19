@@ -10,8 +10,13 @@ import UIKit
 final class DetailedPokemonViewController: UIViewController {
     
     var presenter: DetailedPokemonPresenterProtocol?
+    var pokemonUrlString: String = ""
+    var pokemon: PokemonModel?
+    var imageWidth: Double = 230
+    var imageHeight: Double = 230
+    var statIndicatorViewWidth = 232
+    var pokemonMainType: PokemonTypes = .bug
 
-    
     private lazy var detailedPokemonNameLabel: UILabel = {
         let view = UILabel()
         view.text = "Bulbasaur"
@@ -45,12 +50,12 @@ final class DetailedPokemonViewController: UIViewController {
         view.titleLabel?.font = Constants.shared.detailedPokemonCardTypeButtonFont
         view.backgroundColor = Constants.shared.pokemonTypeGrassColor
         view.layer.cornerRadius = 16
+        view.isHidden = true
         return view
     }()
     
     private lazy var detailedPokemonImageView: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(named: "2")
         view.clipsToBounds = true
         view.contentMode = .scaleAspectFit
         return view
@@ -81,6 +86,7 @@ final class DetailedPokemonViewController: UIViewController {
         view.register(MovesViewCell.self, forCellWithReuseIdentifier: "MovesViewCell")
         layout.scrollDirection = .horizontal
         view.isPagingEnabled = true
+        view.showsHorizontalScrollIndicator = false
         return view
     }()
     
@@ -90,16 +96,52 @@ final class DetailedPokemonViewController: UIViewController {
         return view
     }()
     
+    private lazy var spinnerView: UIActivityIndicatorView = {
+        let view = UIActivityIndicatorView(style: .large)
+        view.hidesWhenStopped = true
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Constants.shared.pokemonCardGrassColor
+        view.backgroundColor = .white
+        view.addSubview(spinnerView)
+        spinnerView.startAnimating()
+        spinnerView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+        presenter?.getPokemon(pokemonUrlString: pokemonUrlString, imageWidth: imageWidth, imageHeight: imageHeight)
         navigationItem.hidesBackButton = true
         navigationItem.leftBarButtonItem = leftBarButtonItem
-        layout()
+    }
+    
+    private func configureColors() {
+        view.backgroundColor = Constants.shared.defineBackgroundColor(type: pokemonMainType).0
+        detailedPokemonFirstTypeButton.backgroundColor = Constants.shared.defineBackgroundColor(type: pokemonMainType).1
+        detailedPokemonSecondTypeButton.backgroundColor = Constants.shared.defineBackgroundColor(type: pokemonMainType).1
+        detailedPokemonIdLabel.textColor = Constants.shared.defineBackgroundColor(type: pokemonMainType).2
     }
     
     @objc private func leftBarButtonItemClicked() {
         navigationController?.popViewController(animated: true)
+    }
+    
+    private func setupImageView() {
+        view.addSubview(detailedPokemonImageView)
+        detailedPokemonImageView.snp.makeConstraints { make in
+            make.top.equalTo(detailedPokemonFirstTypeButton.snp.bottom).offset(15)
+            make.centerX.equalToSuperview()
+            make.height.equalTo(imageHeight)
+            make.width.equalTo(imageWidth)
+        }
+    }
+    
+    private func calculateStats(statValue: Int, statMaxValue: Int) -> Double {
+        let percent = statValue * 100 / statMaxValue
+        
+        let width = percent * statIndicatorViewWidth / 100
+        
+        return Double(width)
     }
     
     private func layout() {
@@ -145,14 +187,6 @@ final class DetailedPokemonViewController: UIViewController {
             make.height.equalTo(46)
         }
         
-        view.addSubview(detailedPokemonImageView)
-        detailedPokemonImageView.snp.makeConstraints { make in
-            make.top.equalTo(detailedPokemonFirstTypeButton.snp.bottom).offset(15)
-            make.centerX.equalToSuperview()
-            make.height.equalTo(230)
-            make.width.equalTo(230)
-        }
-        
         view.addSubview(detailedPokemonStatsCollectionVeiw)
         detailedPokemonStatsCollectionVeiw.snp.makeConstraints { make in
             make.top.equalTo(menuBar.snp.bottom).offset(20)
@@ -172,25 +206,88 @@ extension DetailedPokemonViewController: UICollectionViewDataSource, UICollectio
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        var cell = UICollectionViewCell()
+        var returnCell = UICollectionViewCell()
         
         switch indexPath.row {
         case 0:
-            cell = detailedPokemonStatsCollectionVeiw.dequeueReusableCell(withReuseIdentifier: "AboutViewCell", for: indexPath) as! AboutViewCell
+            let cell = detailedPokemonStatsCollectionVeiw.dequeueReusableCell(withReuseIdentifier: "AboutViewCell", for: indexPath) as! AboutViewCell
+            
+            var abilities: String = ""
+            let height = pokemon?.height ?? -1
+            let weight = pokemon?.weight ?? -1
+
+            cell.speciesLabel.text = pokemon?.species.name.capitalized
+            cell.heightLabel.text = "\(height)"
+            cell.weightLabel.text = "\(weight)"
+
+            if let abilitiesCount = pokemon?.abilities.count {
+                for i in 0..<abilitiesCount {
+
+                    abilities += (pokemon?.abilities[i].ability.name.capitalized)!
+                    if i != (pokemon?.abilities.count)! - 1 {
+                        abilities += ", "
+                    }
+
+                }
+            }
+            
+
+            cell.abilitiesLabel.text = abilities
+            returnCell = cell
         case 1:
-            cell = detailedPokemonStatsCollectionVeiw.dequeueReusableCell(withReuseIdentifier: "BaseStatsViewCell", for: indexPath) as! BaseStatsViewCell
-            cell.backgroundColor = .green
+            let cell = detailedPokemonStatsCollectionVeiw.dequeueReusableCell(withReuseIdentifier: "BaseStatsViewCell", for: indexPath) as! BaseStatsViewCell
+            
+            let hp = pokemon?.stats[0].baseStat ?? -1
+            let attack = pokemon?.stats[1].baseStat ?? -1
+            let defense = pokemon?.stats[2].baseStat ?? -1
+            let spAtk = pokemon?.stats[3].baseStat ?? -1
+            let spDef = pokemon?.stats[4].baseStat ?? -1
+            let speed = pokemon?.stats[5].baseStat ?? -1
+            let total = hp + attack + defense + spAtk + spDef + speed
+            cell.hpLabel.text = "\(hp)"
+            cell.attackLabel.text = "\(attack)"
+            cell.defenseLabel.text = "\(defense)"
+            cell.spAtkLabel.text = "\(spAtk)"
+            cell.spDefLabel.text = "\(spDef)"
+            cell.speedLabel.text = "\(speed)"
+            cell.totalLabel.text = "\(total)"
+            
+            cell.hpIndicatorView.snp.updateConstraints { make in
+                make.width.equalTo(self.calculateStats(statValue: hp, statMaxValue: PokemonStats.shared.maxHp))
+            }
+            cell.attackIndicatorView.snp.updateConstraints { make in
+                make.width.equalTo(self.calculateStats(statValue: attack, statMaxValue: PokemonStats.shared.maxAttack))
+            }
+            cell.defenseIndicatorView.snp.updateConstraints { make in
+                make.width.equalTo(self.calculateStats(statValue: defense, statMaxValue: PokemonStats.shared.maxDefense))
+            }
+            cell.spAtkIndicatorView.snp.updateConstraints { make in
+                make.width.equalTo(self.calculateStats(statValue: spAtk, statMaxValue: PokemonStats.shared.maxSpAtk))
+            }
+            cell.spDefIndicatorView.snp.updateConstraints { make in
+                make.width.equalTo(self.calculateStats(statValue: spDef, statMaxValue: PokemonStats.shared.maxSpDef))
+            }
+            cell.speedIndicatorView.snp.updateConstraints { make in
+                make.width.equalTo(self.calculateStats(statValue: speed, statMaxValue: PokemonStats.shared.maxSpeed))
+            }
+            cell.totalIndicatorView.snp.updateConstraints { make in
+                make.width.equalTo(self.calculateStats(statValue: total, statMaxValue: PokemonStats.shared.maxTotal))
+            }
+            
+            returnCell = cell
         case 2:
-            cell = detailedPokemonStatsCollectionVeiw.dequeueReusableCell(withReuseIdentifier: "EvolutionViewCell", for: indexPath) as! EvolutionViewCell
+            let cell = detailedPokemonStatsCollectionVeiw.dequeueReusableCell(withReuseIdentifier: "EvolutionViewCell", for: indexPath) as! EvolutionViewCell
             cell.backgroundColor = .cyan
+            returnCell = cell
         case 3:
-            cell = detailedPokemonStatsCollectionVeiw.dequeueReusableCell(withReuseIdentifier: "MovesViewCell", for: indexPath) as! MovesViewCell
+            let cell = detailedPokemonStatsCollectionVeiw.dequeueReusableCell(withReuseIdentifier: "MovesViewCell", for: indexPath) as! MovesViewCell
             cell.backgroundColor = .purple
+            returnCell = cell
         default:
             ()
         }
 
-        return cell
+        return returnCell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -239,6 +336,30 @@ extension DetailedPokemonViewController: UICollectionViewDataSource, UICollectio
 }
 
 extension DetailedPokemonViewController: DetailedPokemonViewProtocol {
+    
+    func fetchedPokemon(pokemon: PokemonModel, svgImageView: UIImageView) {
+        
+        self.pokemon = pokemon
+        print(pokemon.name)
+        DispatchQueue.main.async {
+            self.detailedPokemonStatsCollectionVeiw.reloadData()
+            self.detailedPokemonImageView = svgImageView
+            self.detailedPokemonNameLabel.text = pokemon.name.capitalized
+            self.detailedPokemonIdLabel.text = String(format: "#%04d", pokemon.id)
+            
+            if pokemon.types.count == 1 {
+                self.detailedPokemonFirstTypeButton.setTitle(pokemon.types[0].type.name.capitalized, for: .normal)
+            } else {
+                self.detailedPokemonSecondTypeButton.isHidden = false
+                self.detailedPokemonFirstTypeButton.setTitle(pokemon.types[0].type.name.capitalized, for: .normal)
+                self.detailedPokemonSecondTypeButton.setTitle(pokemon.types[1].type.name.capitalized, for: .normal)
+            }
+            self.spinnerView.stopAnimating()
+            self.configureColors()
+            self.layout()
+            self.setupImageView()
+        }
+    }
     
 }
 

@@ -17,8 +17,8 @@ final class PokemonsPresenter {
 
 extension PokemonsPresenter: PokemonsPresenterProtocol {
     
-    func goToDetailedPage() {
-        router?.goToDetailedPage()
+    func goToDetailedPage(pokemonUrlString: String, mainType: PokemonTypes) {
+        router?.goToDetailedPage(pokemonUrlString: pokemonUrlString, mainType: mainType)
     }
     
     func fetchedPokemons(allPokemons: [PokemonModel], allImages: [UIImageView]) {
@@ -27,6 +27,7 @@ extension PokemonsPresenter: PokemonsPresenterProtocol {
         for i in 0..<allPokemons.count {
             var types: [String] = []
             var mainType: PokemonTypes = .grass
+            var url = "https://pokeapi.co/api/v2/pokemon/\(allPokemons[i].name)"
             
             switch allPokemons[i].types[0].type.name {
             case "grass":
@@ -77,7 +78,7 @@ extension PokemonsPresenter: PokemonsPresenterProtocol {
                 types.append(allPokemons[i].types[j].type.name)
             }
             
-            allFetchedPokemons.append(PokemonViewModel(name: allPokemons[i].name, id: allPokemons[i].id, mainType: mainType, types: types, imageView: allImages[i]))
+            allFetchedPokemons.append(PokemonViewModel(name: allPokemons[i].name, id: allPokemons[i].id, url: url, mainType: mainType, types: types, imageView: allImages[i]))
             
         }
         
@@ -85,8 +86,8 @@ extension PokemonsPresenter: PokemonsPresenterProtocol {
     }
     
     
-    func getPokemons(offset: Int, limit: Int) {
-        interactor?.getPokemons(offset: offset, limit: limit)
+    func getPokemons(offset: Int, limit: Int, imageWidth: Double, imageHeight: Double) {
+        interactor?.getPokemons(offset: offset, limit: limit, imageWidth: imageWidth, imageHeight: imageHeight)
     }
     
 }

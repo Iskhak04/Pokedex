@@ -8,13 +8,15 @@
 import UIKit
 
 final class DetailedPokemonModuleBuilder {
-    func build() -> UIViewController {
+    func build(pokemonUrlString: String, mainType: PokemonTypes) -> UIViewController {
         let view = DetailedPokemonViewController()
         let presenter = DetailedPokemonPresenter()
         let interactor = DetailedPokemonInteractor()
         let router = DetailedPokemonRouter()
         
         view.presenter = presenter
+        view.pokemonUrlString = pokemonUrlString
+        view.pokemonMainType = mainType
         
         presenter.interactor = interactor
         presenter.view = view
