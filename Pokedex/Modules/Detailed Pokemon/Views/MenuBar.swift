@@ -19,6 +19,7 @@ final class MenuBar: UIView {
         view.dataSource = self
         view.delegate = self
         view.register(MenuBarCell.self, forCellWithReuseIdentifier: "MenuBarCell")
+        view.isScrollEnabled = false
         return view
     }()
     

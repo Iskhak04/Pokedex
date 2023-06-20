@@ -23,6 +23,8 @@ extension DetailedPokemonInteractor: DetailedPokemonInteractorProtocol {
                 
                 let pokemon = try await NetworkLayer.shared.fetchSinglePokemon(urlString: pokemonUrlString)
                 
+                let species = try await NetworkLayer.shared.fetchPokemonSpecies(urlString: pokemon.species.url)
+                
                 guard let svgImageString = pokemon.sprites.other.dreamWorld.frontDefault else { return }
                 
                 
@@ -30,7 +32,7 @@ extension DetailedPokemonInteractor: DetailedPokemonInteractorProtocol {
                     images.append(imageV)
                 })
     
-                self.presenter?.fetchedPokemon(pokemon: pokemon, svgImageView: images[0])
+                self.presenter?.fetchedPokemon(pokemon: pokemon, svgImageView: images[0], pokemonSpecies: species)
             } catch {
                 
             }

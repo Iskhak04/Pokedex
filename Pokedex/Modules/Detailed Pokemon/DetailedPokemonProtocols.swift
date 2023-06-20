@@ -9,7 +9,7 @@ import UIKit
 
 //Conforms View, Presenter -> View
 protocol DetailedPokemonViewProtocol {
-    func fetchedPokemon(pokemon: PokemonModel, svgImageView: UIImageView)
+    func fetchedPokemon(pokemon: PokemonModel, svgImageView: UIImageView, pokemonSpecies: PokemonSpeciesModel)
 }
 
 //Conforms Presenter, View -> Presenter, Interactor -> Presenter
@@ -18,7 +18,7 @@ protocol DetailedPokemonPresenterProtocol {
     func getPokemon(pokemonUrlString: String, imageWidth: Double, imageHeight: Double)
     
     //Interactor -> Presenter
-    func fetchedPokemon(pokemon: PokemonModel, svgImageView: UIImageView)
+    func fetchedPokemon(pokemon: PokemonModel, svgImageView: UIImageView, pokemonSpecies: PokemonSpeciesModel)
 }
 
 //Conforms Interactor, Presenter -> Interactor

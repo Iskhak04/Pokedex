@@ -17,8 +17,8 @@ final class DetailedPokemonPresenter {
 
 extension DetailedPokemonPresenter: DetailedPokemonPresenterProtocol {
     
-    func fetchedPokemon(pokemon: PokemonModel, svgImageView: UIImageView) {
-        view?.fetchedPokemon(pokemon: pokemon, svgImageView: svgImageView)
+    func fetchedPokemon(pokemon: PokemonModel, svgImageView: UIImageView, pokemonSpecies: PokemonSpeciesModel) {
+        view?.fetchedPokemon(pokemon: pokemon, svgImageView: svgImageView, pokemonSpecies: pokemonSpecies)
     }
     
     func getPokemon(pokemonUrlString: String, imageWidth: Double, imageHeight: Double) {

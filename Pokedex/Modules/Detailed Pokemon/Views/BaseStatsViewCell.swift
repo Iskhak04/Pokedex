@@ -277,8 +277,8 @@ final class BaseStatsViewCell: UICollectionViewCell {
         return view
     }()
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         
         addSubview(hpView)
         hpView.snp.makeConstraints { make in
@@ -315,7 +315,7 @@ final class BaseStatsViewCell: UICollectionViewCell {
             make.centerY.equalToSuperview()
             make.left.equalTo(hpLabel.snp.right).offset(21)
             make.height.equalTo(4)
-            make.width.equalTo(100)
+            make.width.equalTo(0)
         }
         
         addSubview(attackView)
@@ -353,7 +353,7 @@ final class BaseStatsViewCell: UICollectionViewCell {
             make.centerY.equalToSuperview()
             make.left.equalTo(attackLabel.snp.right).offset(21)
             make.height.equalTo(4)
-            make.width.equalTo(100)
+            make.width.equalTo(0)
         }
         
         addSubview(defenseView)
@@ -391,7 +391,7 @@ final class BaseStatsViewCell: UICollectionViewCell {
             make.centerY.equalToSuperview()
             make.left.equalTo(defenseLabel.snp.right).offset(21)
             make.height.equalTo(4)
-            make.width.equalTo(100)
+            make.width.equalTo(0)
         }
         
         addSubview(spAtkView)
@@ -429,7 +429,7 @@ final class BaseStatsViewCell: UICollectionViewCell {
             make.centerY.equalToSuperview()
             make.left.equalTo(spAtkLabel.snp.right).offset(21)
             make.height.equalTo(4)
-            make.width.equalTo(100)
+            make.width.equalTo(0)
         }
         
         addSubview(spDefView)
@@ -467,7 +467,7 @@ final class BaseStatsViewCell: UICollectionViewCell {
             make.centerY.equalToSuperview()
             make.left.equalTo(spDefLabel.snp.right).offset(21)
             make.height.equalTo(4)
-            make.width.equalTo(100)
+            make.width.equalTo(0)
         }
         
         addSubview(speedView)
@@ -505,7 +505,7 @@ final class BaseStatsViewCell: UICollectionViewCell {
             make.centerY.equalToSuperview()
             make.left.equalTo(speedLabel.snp.right).offset(21)
             make.height.equalTo(4)
-            make.width.equalTo(100)
+            make.width.equalTo(0)
         }
         
         addSubview(totalView)
@@ -543,7 +543,7 @@ final class BaseStatsViewCell: UICollectionViewCell {
             make.centerY.equalToSuperview()
             make.left.equalTo(totalLabel.snp.right).offset(21)
             make.height.equalTo(4)
-            make.width.equalTo(100)
+            make.width.equalTo(0)
         }
         
         addSubview(typeDefensesWordLabel)
@@ -560,5 +560,9 @@ final class BaseStatsViewCell: UICollectionViewCell {
         
         
         
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

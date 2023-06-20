@@ -12,6 +12,17 @@ final class NetworkLayer {
     
     static let shared = NetworkLayer()
     
+    func fetchPokemonSpecies(urlString: String) async throws -> PokemonSpeciesModel {
+        
+        let decoder: JSONDecoder = {
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            return decoder
+        }()
+        
+        return try await AF.request(urlString, method: .get).serializingDecodable(PokemonSpeciesModel.self, decoder: decoder).value
+    }
+    
     func fetchSinglePokemon(urlString: String) async throws -> PokemonModel {
         
         let decoder: JSONDecoder = {

@@ -14,8 +14,8 @@ final class PokemonsViewController: UIViewController {
     
     var presenter: PokemonsPresenterProtocol?
     private var offset = 0
-    private var limit = 10
-    private let maxOffset = 1271
+    private var limit = 12
+    private let maxOffset = 2542
     private var allFetchedPokemons: [PokemonViewModel] = []
     private var filteredPokemons: [PokemonViewModel] = []
     var imageWidth: Double = 80
@@ -54,6 +54,28 @@ final class PokemonsViewController: UIViewController {
         return view
     }()
     
+    private lazy var scrollToTopButton: UIButton = {
+        let view = UIButton()
+        view.setImage(UIImage(systemName: "arrow.up.circle", withConfiguration: UIImage.SymbolConfiguration(pointSize: 35, weight: .bold, scale: .large)), for: .normal)
+        view.tintColor = .white
+        view.layer.cornerRadius = 30
+        view.backgroundColor = .blue
+        view.addTarget(self, action: #selector(scrollToTopButtonClicked), for: .touchUpInside)
+        view.isHidden = true
+        return view
+    }()
+    
+    private lazy var scrollToBottomButton: UIButton = {
+        let view = UIButton()
+        view.setImage(UIImage(systemName: "arrow.down.circle", withConfiguration: UIImage.SymbolConfiguration(pointSize: 35, weight: .bold, scale: .large)), for: .normal)
+        view.tintColor = .white
+        view.layer.cornerRadius = 30
+        view.backgroundColor = .blue
+        view.addTarget(self, action: #selector(scrollToBottomButtonClicked), for: .touchUpInside)
+        view.isHidden = true
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         spinnerView.startAnimating()
@@ -70,6 +92,14 @@ final class PokemonsViewController: UIViewController {
         layout()
         presenter?.getPokemons(offset: offset, limit: limit, imageWidth: imageWidth, imageHeight: imageHeight)
         offset += limit
+    }
+    
+    @objc private func scrollToBottomButtonClicked() {
+        pokemonsCollectionView.scrollToItem(at: IndexPath(row: filteredPokemons.count - 1, section: 0), at: [], animated: true)
+    }
+    
+    @objc private func scrollToTopButtonClicked() {
+        pokemonsCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: [], animated: true)
     }
     
     @objc private func loadNewPokemons() {
@@ -91,6 +121,23 @@ final class PokemonsViewController: UIViewController {
         spinnerView.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
+        
+        view.addSubview(scrollToBottomButton)
+        scrollToBottomButton.snp.makeConstraints { make in
+            make.bottom.equalToSuperview().offset(-50)
+            make.right.equalToSuperview().offset(-20)
+            make.height.equalTo(60)
+            make.width.equalTo(60)
+        }
+        
+        view.addSubview(scrollToTopButton)
+        scrollToTopButton.snp.makeConstraints { make in
+            make.bottom.equalTo(scrollToBottomButton.snp.top).offset(-10)
+            make.right.equalToSuperview().offset(-20)
+            make.height.equalTo(60)
+            make.width.equalTo(60)
+        }
+        
     }
 }
 
@@ -109,10 +156,12 @@ extension PokemonsViewController: PokemonsViewProtocol {
 //
 //            return false
 //        }
-        //loadNewPokemons()
+        loadNewPokemons()
         DispatchQueue.main.async {
-            self.pokemonsCollectionView.reloadData()
             self.spinnerView.stopAnimating()
+            self.pokemonsCollectionView.reloadData()
+            self.scrollToTopButton.isHidden = false
+            self.scrollToBottomButton.isHidden = false
         }
         
     }
@@ -145,11 +194,12 @@ extension PokemonsViewController: UICollectionViewDataSource, UICollectionViewDe
         let hideView = UIView()
         hideView.backgroundColor = Constants.shared.defineBackgroundColor(type: filteredPokemons[indexPath.row].mainType).0
         cell.addSubview(hideView)
+        hideView.layer.cornerRadius = 15
         hideView.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().offset(-15)
-            make.right.equalToSuperview().offset(-10)
-            make.height.equalTo(85)
-            make.width.equalTo(85)
+            make.bottom.equalToSuperview().offset(0)
+            make.right.equalToSuperview().offset(0)
+            make.height.equalTo(105)
+            make.width.equalTo(100)
         }
         
         if filteredPokemons[indexPath.row].types.count == 1 {

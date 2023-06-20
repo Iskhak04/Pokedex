@@ -89,9 +89,39 @@ final class AboutViewCell: UICollectionViewCell {
         return view
     }()
     
-    lazy var genderLabel: UILabel = {
+    lazy var genderView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .green
+        return view
+    }()
+    
+    lazy var maleImageView: UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(named: "male")
+        view.clipsToBounds = true
+        view.contentMode = .scaleAspectFit
+        return view
+    }()
+    
+    lazy var femaleImageView: UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(named: "female")
+        view.clipsToBounds = true
+        view.contentMode = .scaleAspectFit
+        return view
+    }()
+    
+    lazy var genderLabelMale: UILabel = {
         let view = UILabel()
-        view.text = "87.5% 12.5%"
+        view.text = "-9"
+        view.font = Constants.shared.detailedPokemonCardStatLabelFont
+        view.textColor = .black
+        return view
+    }()
+    
+    lazy var genderLabelFemale: UILabel = {
+        let view = UILabel()
+        view.text = "-9"
         view.font = Constants.shared.detailedPokemonCardStatLabelFont
         view.textColor = .black
         return view
@@ -192,27 +222,55 @@ final class AboutViewCell: UICollectionViewCell {
         
         addSubview(genderWordLabel)
         genderWordLabel.snp.makeConstraints { make in
-            make.top.equalTo(breedingWordLabel.snp.bottom).offset(20)
+            make.top.equalTo(breedingWordLabel.snp.bottom).offset(15)
             make.left.equalToSuperview().offset(Constants.shared.sideOffset)
             make.width.equalTo(88)
         }
         
-        addSubview(genderLabel)
-        genderLabel.snp.makeConstraints { make in
-            make.top.equalTo(breedingWordLabel.snp.bottom).offset(20)
+        addSubview(genderView)
+        genderView.snp.makeConstraints { make in
+            make.top.equalTo(breedingWordLabel.snp.bottom).offset(25)
             make.left.equalTo(genderWordLabel.snp.right).offset(40)
+        }
+        
+        genderView.addSubview(maleImageView)
+        maleImageView.snp.makeConstraints { make in
+            make.left.equalToSuperview()
+            make.height.equalTo(20)
+            make.width.equalTo(20)
+            make.centerY.equalToSuperview()
+        }
+        
+        genderView.addSubview(genderLabelMale)
+        genderLabelMale.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.left.equalTo(maleImageView.snp.right).offset(10)
+        }
+        
+        genderView.addSubview(femaleImageView)
+        femaleImageView.snp.makeConstraints { make in
+            make.left.equalTo(genderLabelMale.snp.right).offset(10)
+            make.height.equalTo(20)
+            make.width.equalTo(20)
+            make.centerY.equalToSuperview()
+        }
+        
+        genderView.addSubview(genderLabelFemale)
+        genderLabelFemale.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.left.equalTo(femaleImageView.snp.right).offset(5)
         }
         
         addSubview(eggGroupsWordLabel)
         eggGroupsWordLabel.snp.makeConstraints { make in
-            make.top.equalTo(genderLabel.snp.bottom).offset(15)
+            make.top.equalTo(genderLabelMale.snp.bottom).offset(15)
             make.left.equalToSuperview().offset(Constants.shared.sideOffset)
             make.width.equalTo(88)
         }
         
         addSubview(eggGroupsLabel)
         eggGroupsLabel.snp.makeConstraints { make in
-            make.top.equalTo(genderLabel.snp.bottom).offset(15)
+            make.top.equalTo(genderLabelMale.snp.bottom).offset(15)
             make.left.equalTo(eggGroupsWordLabel.snp.right).offset(40)
         }
         

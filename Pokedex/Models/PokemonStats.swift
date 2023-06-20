@@ -9,13 +9,13 @@ final class PokemonStats {
     
     static let shared = PokemonStats()
     
-    let maxHp = 255
-    let maxAttack = 190
-    let maxDefense = 230
-    let maxSpAtk = 194
-    let maxSpDef = 230
-    let maxSpeed = 180
-    let maxTotal = 720
+    let maxHp = 255 //Blissey #242
+    let maxAttack = 150 //Rayquaza #384
+    let maxDefense = 230 //Shuckle #213
+    let maxSpAtk = 154 //MewTwo #150
+    let maxSpDef = 230 //Shuckle #213
+    let maxSpeed = 160 //Ninjask #291
+    let maxTotal = 680 //MewTwo #150, Rayquaza #384
     
     private init() {}
 }

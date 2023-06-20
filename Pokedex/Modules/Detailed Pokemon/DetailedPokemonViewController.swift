@@ -14,7 +14,8 @@ final class DetailedPokemonViewController: UIViewController {
     var pokemon: PokemonModel?
     var imageWidth: Double = 230
     var imageHeight: Double = 230
-    var statIndicatorViewWidth = 232
+    var statIndicatorViewWidth: Double = 232
+    var pokemonSpecies: PokemonSpeciesModel?
     var pokemonMainType: PokemonTypes = .bug
 
     private lazy var detailedPokemonNameLabel: UILabel = {
@@ -136,12 +137,45 @@ final class DetailedPokemonViewController: UIViewController {
         }
     }
     
+    private func defineQualityOfStat(indicatorWidth: Double) -> UIColor {
+        
+        let badQuality = UIColor.systemRed
+        let mediumQuality = UIColor.systemOrange
+        let goodQuality = UIColor.systemCyan
+        let bestQuality = UIColor.systemGreen
+        
+        if indicatorWidth >= 0 && indicatorWidth <= 58 {
+            return badQuality
+        } else if indicatorWidth > 58 && indicatorWidth <= 116 {
+            return mediumQuality
+        }
+        else if indicatorWidth > 116 && indicatorWidth <= 174 {
+            return goodQuality
+        }
+        
+        return bestQuality
+    }
+    
+    private func definePokemonGender(genderRate: Int) -> (Double, Double) {
+        var chanceMale: Double = 0
+        var chanceFemale: Double = 0
+        
+        if genderRate == -1 {
+            return (0,0)
+        }
+        
+        chanceFemale = Double(genderRate) * 100 / 8
+        chanceMale = 100 - chanceFemale
+        
+        return (chanceMale, chanceFemale)
+    }
+    
     private func calculateStats(statValue: Int, statMaxValue: Int) -> Double {
-        let percent = statValue * 100 / statMaxValue
+        let percent: Double = Double(statValue * 100 / statMaxValue)
         
-        let width = percent * statIndicatorViewWidth / 100
+        let width: Double = percent * statIndicatorViewWidth / 100
         
-        return Double(width)
+        return width
     }
     
     private func layout() {
@@ -213,12 +247,33 @@ extension DetailedPokemonViewController: UICollectionViewDataSource, UICollectio
             let cell = detailedPokemonStatsCollectionVeiw.dequeueReusableCell(withReuseIdentifier: "AboutViewCell", for: indexPath) as! AboutViewCell
             
             var abilities: String = ""
-            let height = pokemon?.height ?? -1
-            let weight = pokemon?.weight ?? -1
+            var species: String = ""
+            let height: Double = Double((pokemon?.height)!) / 10
+            let weight: Double = Double((pokemon?.weight)!) / 10
 
             cell.speciesLabel.text = pokemon?.species.name.capitalized
-            cell.heightLabel.text = "\(height)"
-            cell.weightLabel.text = "\(weight)"
+            cell.heightLabel.text = "\(height) m"
+            cell.weightLabel.text = "\(weight) kg"
+            
+            let genders = definePokemonGender(genderRate: pokemonSpecies!.genderRate)
+            
+            
+            cell.genderLabelMale.text = "\(genders.0)%"
+            cell.genderLabelFemale.text = "\(genders.1)%"
+            
+            
+            
+            
+            if let speciesCount = pokemonSpecies?.eggGroups.count {
+                for i in 0..<speciesCount {
+                    
+                    species += (pokemonSpecies?.eggGroups[i].name.capitalized)!
+                    if i != speciesCount - 1 {
+                        species += ", "
+                    }
+                }
+            }
+            
 
             if let abilitiesCount = pokemon?.abilities.count {
                 for i in 0..<abilitiesCount {
@@ -231,7 +286,7 @@ extension DetailedPokemonViewController: UICollectionViewDataSource, UICollectio
                 }
             }
             
-
+            cell.eggGroupsLabel.text = species
             cell.abilitiesLabel.text = abilities
             returnCell = cell
         case 1:
@@ -254,25 +309,43 @@ extension DetailedPokemonViewController: UICollectionViewDataSource, UICollectio
             
             cell.hpIndicatorView.snp.updateConstraints { make in
                 make.width.equalTo(self.calculateStats(statValue: hp, statMaxValue: PokemonStats.shared.maxHp))
+                
+                cell.hpIndicatorView.backgroundColor = defineQualityOfStat(indicatorWidth: self.calculateStats(statValue: hp, statMaxValue: PokemonStats.shared.maxHp))
+                
             }
             cell.attackIndicatorView.snp.updateConstraints { make in
                 make.width.equalTo(self.calculateStats(statValue: attack, statMaxValue: PokemonStats.shared.maxAttack))
+                
+                cell.attackIndicatorView.backgroundColor = defineQualityOfStat(indicatorWidth: self.calculateStats(statValue: attack, statMaxValue: PokemonStats.shared.maxAttack))
             }
             cell.defenseIndicatorView.snp.updateConstraints { make in
                 make.width.equalTo(self.calculateStats(statValue: defense, statMaxValue: PokemonStats.shared.maxDefense))
+                cell.defenseIndicatorView.backgroundColor = defineQualityOfStat(indicatorWidth: self.calculateStats(statValue: defense, statMaxValue: PokemonStats.shared.maxDefense))
             }
             cell.spAtkIndicatorView.snp.updateConstraints { make in
                 make.width.equalTo(self.calculateStats(statValue: spAtk, statMaxValue: PokemonStats.shared.maxSpAtk))
+                cell.spAtkIndicatorView.backgroundColor = defineQualityOfStat(indicatorWidth: self.calculateStats(statValue: spAtk, statMaxValue: PokemonStats.shared.maxSpAtk))
             }
             cell.spDefIndicatorView.snp.updateConstraints { make in
                 make.width.equalTo(self.calculateStats(statValue: spDef, statMaxValue: PokemonStats.shared.maxSpDef))
+                cell.spDefIndicatorView.backgroundColor = defineQualityOfStat(indicatorWidth: self.calculateStats(statValue: spDef, statMaxValue: PokemonStats.shared.maxSpDef))
             }
             cell.speedIndicatorView.snp.updateConstraints { make in
                 make.width.equalTo(self.calculateStats(statValue: speed, statMaxValue: PokemonStats.shared.maxSpeed))
+                cell.speedIndicatorView.backgroundColor = defineQualityOfStat(indicatorWidth: self.calculateStats(statValue: speed, statMaxValue: PokemonStats.shared.maxSpeed))
             }
+            
+            cell.totalIndicatorView.backgroundColor = defineQualityOfStat(indicatorWidth: self.calculateStats(statValue: total, statMaxValue: PokemonStats.shared.maxTotal))
+            
             cell.totalIndicatorView.snp.updateConstraints { make in
                 make.width.equalTo(self.calculateStats(statValue: total, statMaxValue: PokemonStats.shared.maxTotal))
             }
+
+//            UIView.animate(withDuration: 3, delay: 2, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+//                print("anim start")
+//                cell.totalIndicatorView.layoutIfNeeded()
+//            }, completion: nil)
+            
             
             returnCell = cell
         case 2:
@@ -337,8 +410,9 @@ extension DetailedPokemonViewController: UICollectionViewDataSource, UICollectio
 
 extension DetailedPokemonViewController: DetailedPokemonViewProtocol {
     
-    func fetchedPokemon(pokemon: PokemonModel, svgImageView: UIImageView) {
+    func fetchedPokemon(pokemon: PokemonModel, svgImageView: UIImageView, pokemonSpecies: PokemonSpeciesModel) {
         
+        self.pokemonSpecies = pokemonSpecies
         self.pokemon = pokemon
         print(pokemon.name)
         DispatchQueue.main.async {
