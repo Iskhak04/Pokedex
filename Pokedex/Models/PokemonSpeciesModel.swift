@@ -10,7 +10,12 @@ struct PokemonSpeciesModel: Codable {
     let captureRate: Int
     let color: PokemonColor
     let eggGroups: [EggGroups]
+    let evolutionChain: EvolutionChainUrl
     let genderRate: Int //Chance of a pokemon of being a female (max 8) (-1 is genderless)
+}
+
+struct EvolutionChainUrl: Codable {
+    let url: String
 }
 
 struct EggGroups: Codable {

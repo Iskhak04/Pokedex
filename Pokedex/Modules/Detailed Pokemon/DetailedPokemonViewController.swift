@@ -17,6 +17,8 @@ final class DetailedPokemonViewController: UIViewController {
     var statIndicatorViewWidth: Double = 232
     var pokemonSpecies: PokemonSpeciesModel?
     var pokemonMainType: PokemonTypes = .bug
+    var isFirstTimeOpened: Bool = false
+    var pokemonEvolution: EvolutionViewModel?
 
     private lazy var detailedPokemonNameLabel: UILabel = {
         let view = UILabel()
@@ -105,6 +107,7 @@ final class DetailedPokemonViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        isFirstTimeOpened = true
         view.backgroundColor = .white
         view.addSubview(spinnerView)
         spinnerView.startAnimating()
@@ -131,7 +134,7 @@ final class DetailedPokemonViewController: UIViewController {
         view.addSubview(detailedPokemonImageView)
         detailedPokemonImageView.snp.makeConstraints { make in
             make.top.equalTo(detailedPokemonFirstTypeButton.snp.bottom).offset(15)
-            make.centerX.equalToSuperview()
+            make.centerX.equalToSuperview().offset(5)
             make.height.equalTo(imageHeight)
             make.width.equalTo(imageWidth)
         }
@@ -307,50 +310,79 @@ extension DetailedPokemonViewController: UICollectionViewDataSource, UICollectio
             cell.speedLabel.text = "\(speed)"
             cell.totalLabel.text = "\(total)"
             
-            cell.hpIndicatorView.snp.updateConstraints { make in
-                make.width.equalTo(self.calculateStats(statValue: hp, statMaxValue: PokemonStats.shared.maxHp))
-                
-                cell.hpIndicatorView.backgroundColor = defineQualityOfStat(indicatorWidth: self.calculateStats(statValue: hp, statMaxValue: PokemonStats.shared.maxHp))
-                
-            }
-            cell.attackIndicatorView.snp.updateConstraints { make in
-                make.width.equalTo(self.calculateStats(statValue: attack, statMaxValue: PokemonStats.shared.maxAttack))
-                
-                cell.attackIndicatorView.backgroundColor = defineQualityOfStat(indicatorWidth: self.calculateStats(statValue: attack, statMaxValue: PokemonStats.shared.maxAttack))
-            }
-            cell.defenseIndicatorView.snp.updateConstraints { make in
-                make.width.equalTo(self.calculateStats(statValue: defense, statMaxValue: PokemonStats.shared.maxDefense))
-                cell.defenseIndicatorView.backgroundColor = defineQualityOfStat(indicatorWidth: self.calculateStats(statValue: defense, statMaxValue: PokemonStats.shared.maxDefense))
-            }
-            cell.spAtkIndicatorView.snp.updateConstraints { make in
-                make.width.equalTo(self.calculateStats(statValue: spAtk, statMaxValue: PokemonStats.shared.maxSpAtk))
-                cell.spAtkIndicatorView.backgroundColor = defineQualityOfStat(indicatorWidth: self.calculateStats(statValue: spAtk, statMaxValue: PokemonStats.shared.maxSpAtk))
-            }
-            cell.spDefIndicatorView.snp.updateConstraints { make in
-                make.width.equalTo(self.calculateStats(statValue: spDef, statMaxValue: PokemonStats.shared.maxSpDef))
-                cell.spDefIndicatorView.backgroundColor = defineQualityOfStat(indicatorWidth: self.calculateStats(statValue: spDef, statMaxValue: PokemonStats.shared.maxSpDef))
-            }
-            cell.speedIndicatorView.snp.updateConstraints { make in
-                make.width.equalTo(self.calculateStats(statValue: speed, statMaxValue: PokemonStats.shared.maxSpeed))
-                cell.speedIndicatorView.backgroundColor = defineQualityOfStat(indicatorWidth: self.calculateStats(statValue: speed, statMaxValue: PokemonStats.shared.maxSpeed))
-            }
+            cell.hpIndicatorView.backgroundColor = defineQualityOfStat(indicatorWidth: self.calculateStats(statValue: hp, statMaxValue: PokemonStats.shared.maxHp))
+
+            cell.attackIndicatorView.backgroundColor = defineQualityOfStat(indicatorWidth: self.calculateStats(statValue: attack, statMaxValue: PokemonStats.shared.maxAttack))
+
+            cell.defenseIndicatorView.backgroundColor = defineQualityOfStat(indicatorWidth: self.calculateStats(statValue: defense, statMaxValue: PokemonStats.shared.maxDefense))
+
+            cell.spAtkIndicatorView.backgroundColor = defineQualityOfStat(indicatorWidth: self.calculateStats(statValue: spAtk, statMaxValue: PokemonStats.shared.maxSpAtk))
+            
+            cell.spDefIndicatorView.backgroundColor = defineQualityOfStat(indicatorWidth: self.calculateStats(statValue: spDef, statMaxValue: PokemonStats.shared.maxSpDef))
+
+            cell.speedIndicatorView.backgroundColor = defineQualityOfStat(indicatorWidth: self.calculateStats(statValue: speed, statMaxValue: PokemonStats.shared.maxSpeed))
             
             cell.totalIndicatorView.backgroundColor = defineQualityOfStat(indicatorWidth: self.calculateStats(statValue: total, statMaxValue: PokemonStats.shared.maxTotal))
+            
+            if isFirstTimeOpened {
+                UIView.animate(withDuration: 2, delay: 0.2, usingSpringWithDamping: 2, initialSpringVelocity: 2, options: .curveEaseIn, animations: {
+
+                    cell.totalIndicatorView.frame = CGRect(x: 0, y: 0, width: self.calculateStats(statValue: total, statMaxValue: PokemonStats.shared.maxTotal), height: 0)
+                    cell.hpIndicatorView.frame = CGRect(x: 0, y: 0, width: self.calculateStats(statValue: hp, statMaxValue: PokemonStats.shared.maxHp), height: 0)
+                    cell.attackIndicatorView.frame = CGRect(x: 0, y: 0, width: self.calculateStats(statValue: attack, statMaxValue: PokemonStats.shared.maxAttack), height: 0)
+                    cell.defenseIndicatorView.frame = CGRect(x: 0, y: 0, width: self.calculateStats(statValue: defense, statMaxValue: PokemonStats.shared.maxDefense), height: 0)
+                    cell.spAtkIndicatorView.frame = CGRect(x: 0, y: 0, width: self.calculateStats(statValue: spAtk, statMaxValue: PokemonStats.shared.maxSpAtk), height: 0)
+                    cell.spDefIndicatorView.frame = CGRect(x: 0, y: 0, width: self.calculateStats(statValue: spDef, statMaxValue: PokemonStats.shared.maxSpDef), height: 0)
+                    cell.speedIndicatorView.frame = CGRect(x: 0, y: 0, width: self.calculateStats(statValue: speed, statMaxValue: PokemonStats.shared.maxSpeed), height: 0)
+                    
+                }, completion: nil)
+                isFirstTimeOpened = false
+            }
             
             cell.totalIndicatorView.snp.updateConstraints { make in
                 make.width.equalTo(self.calculateStats(statValue: total, statMaxValue: PokemonStats.shared.maxTotal))
             }
-
-//            UIView.animate(withDuration: 3, delay: 2, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-//                print("anim start")
-//                cell.totalIndicatorView.layoutIfNeeded()
-//            }, completion: nil)
             
+            cell.hpIndicatorView.snp.updateConstraints { make in
+                make.width.equalTo(self.calculateStats(statValue: hp, statMaxValue: PokemonStats.shared.maxHp))
+            }
             
+            cell.attackIndicatorView.snp.updateConstraints { make in
+                make.width.equalTo(self.calculateStats(statValue: attack, statMaxValue: PokemonStats.shared.maxAttack))
+            }
+            
+            cell.defenseIndicatorView.snp.updateConstraints { make in
+                make.width.equalTo(self.calculateStats(statValue: defense, statMaxValue: PokemonStats.shared.maxDefense))
+            }
+            
+            cell.spAtkIndicatorView.snp.updateConstraints { make in
+                make.width.equalTo(self.calculateStats(statValue: spAtk, statMaxValue: PokemonStats.shared.maxSpAtk))
+            }
+            
+            cell.spDefIndicatorView.snp.updateConstraints { make in
+                make.width.equalTo(self.calculateStats(statValue: spDef, statMaxValue: PokemonStats.shared.maxSpDef))
+            }
+            
+            cell.speedIndicatorView.snp.updateConstraints { make in
+                make.width.equalTo(self.calculateStats(statValue: speed, statMaxValue: PokemonStats.shared.maxSpeed))
+                
+            }
+        
             returnCell = cell
         case 2:
             let cell = detailedPokemonStatsCollectionVeiw.dequeueReusableCell(withReuseIdentifier: "EvolutionViewCell", for: indexPath) as! EvolutionViewCell
-            cell.backgroundColor = .cyan
+            cell.firstTypePokemonImageView = pokemonEvolution!.firstPokemonTypeImageView
+            cell.secondTypePokemonImageView = pokemonEvolution!.secondPokemonTypeImageView
+            
+            if pokemonEvolution?.fourthPokemonTypeImageView == nil {
+                cell.bottomView.isHidden = true
+            } else {
+                cell.thirdTypePokemonImageView = pokemonEvolution!.thirdPokemonTypeImageView
+                cell.fourthTypePokemonImageView = pokemonEvolution!.fourthPokemonTypeImageView!
+                cell.secondLevelLabel.text = ("Lvl \(pokemonEvolution?.secondLevel ?? 1)")
+            }
+            cell.firstLevelLabel.text = ("Lvl \(pokemonEvolution?.firstLevel ?? 1)")
+            
             returnCell = cell
         case 3:
             let cell = detailedPokemonStatsCollectionVeiw.dequeueReusableCell(withReuseIdentifier: "MovesViewCell", for: indexPath) as! MovesViewCell
@@ -410,9 +442,10 @@ extension DetailedPokemonViewController: UICollectionViewDataSource, UICollectio
 
 extension DetailedPokemonViewController: DetailedPokemonViewProtocol {
     
-    func fetchedPokemon(pokemon: PokemonModel, svgImageView: UIImageView, pokemonSpecies: PokemonSpeciesModel) {
+    func fetchedPokemon(pokemon: PokemonModel, svgImageView: UIImageView, pokemonSpecies: PokemonSpeciesModel, evolutionChain: EvolutionViewModel) {
         
         self.pokemonSpecies = pokemonSpecies
+        self.pokemonEvolution = evolutionChain
         self.pokemon = pokemon
         print(pokemon.name)
         DispatchQueue.main.async {

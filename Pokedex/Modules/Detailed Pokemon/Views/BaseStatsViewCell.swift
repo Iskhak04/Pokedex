@@ -505,7 +505,7 @@ final class BaseStatsViewCell: UICollectionViewCell {
             make.centerY.equalToSuperview()
             make.left.equalTo(speedLabel.snp.right).offset(21)
             make.height.equalTo(4)
-            make.width.equalTo(0)
+            make.width.equalTo(10)
         }
         
         addSubview(totalView)

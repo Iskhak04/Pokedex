@@ -15,7 +15,7 @@ final class PokemonsViewController: UIViewController {
     var presenter: PokemonsPresenterProtocol?
     private var offset = 0
     private var limit = 12
-    private let maxOffset = 2542
+    private let maxOffset = 1269
     private var allFetchedPokemons: [PokemonViewModel] = []
     private var filteredPokemons: [PokemonViewModel] = []
     var imageWidth: Double = 80
@@ -95,7 +95,8 @@ final class PokemonsViewController: UIViewController {
     }
     
     @objc private func scrollToBottomButtonClicked() {
-        pokemonsCollectionView.scrollToItem(at: IndexPath(row: filteredPokemons.count - 1, section: 0), at: [], animated: true)
+        let arrayCount = filteredPokemons.count
+        pokemonsCollectionView.scrollToItem(at: IndexPath(row: arrayCount - 1, section: 0), at: [], animated: true)
     }
     
     @objc private func scrollToTopButtonClicked() {
@@ -105,6 +106,7 @@ final class PokemonsViewController: UIViewController {
     @objc private func loadNewPokemons() {
         presenter?.getPokemons(offset: offset, limit: limit, imageWidth: imageWidth, imageHeight: imageHeight)
         offset += limit
+        refreshControl.endRefreshing()
     }
     
     private func layout() {
@@ -149,13 +151,13 @@ extension PokemonsViewController: PokemonsViewProtocol {
     func fetchedPokemons(allPokemons: [PokemonViewModel]) {
         allFetchedPokemons += allPokemons
         filteredPokemons += allPokemons
-//        allFetchedPokemons.sort { pokemon1, pokemon2 in
-//            if pokemon2.id > pokemon1.id {
-//                return true
-//            }
-//
-//            return false
-//        }
+        allFetchedPokemons.sort { pokemon1, pokemon2 in
+            if pokemon2.id > pokemon1.id {
+                return true
+            }
+
+            return false
+        }
         loadNewPokemons()
         DispatchQueue.main.async {
             self.spinnerView.stopAnimating()
@@ -185,22 +187,28 @@ extension PokemonsViewController: UICollectionViewDataSource, UICollectionViewDe
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = pokemonsCollectionView.dequeueReusableCell(withReuseIdentifier: "PokemonCell", for: indexPath) as! PokemonCell
         
-        cell.layer.cornerRadius = 15
-        cell.pokemonNameLabel.text = filteredPokemons[indexPath.row].name.capitalized
-        cell.pokemonIdLabel.text = String(format: "#%04d", filteredPokemons[indexPath.row].id)
         
         
-        cell.pokemonImageView = filteredPokemons[indexPath.row].imageView
         let hideView = UIView()
-        hideView.backgroundColor = Constants.shared.defineBackgroundColor(type: filteredPokemons[indexPath.row].mainType).0
         cell.addSubview(hideView)
         hideView.layer.cornerRadius = 15
         hideView.snp.makeConstraints { make in
             make.bottom.equalToSuperview().offset(0)
             make.right.equalToSuperview().offset(0)
-            make.height.equalTo(105)
-            make.width.equalTo(100)
+            make.height.equalTo(150)
+            make.width.equalTo(185)
         }
+        hideView.backgroundColor = Constants.shared.defineBackgroundColor(type: filteredPokemons[indexPath.row].mainType).0
+        
+        view.backgroundColor = .systemBackground
+        
+        cell.layer.cornerRadius = 15
+        cell.pokemonNameLabel.text = filteredPokemons[indexPath.row].name.capitalized
+        cell.pokemonIdLabel.text = String(format: "#%04d", filteredPokemons[indexPath.row].id)
+        
+        cell.pokemonImageView = filteredPokemons[indexPath.row].imageView
+        
+        
         
         if filteredPokemons[indexPath.row].types.count == 1 {
             cell.pokemonSecondTypeButton.isHidden = true
@@ -222,10 +230,11 @@ extension PokemonsViewController: UICollectionViewDataSource, UICollectionViewDe
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.item == filteredPokemons.count - 1, offset < maxOffset {
-            loadNewPokemons()
-        }
+        print("willDisplay")
     }
+    
+    
+
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 185, height: 150)
