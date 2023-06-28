@@ -374,9 +374,14 @@ extension DetailedPokemonViewController: UICollectionViewDataSource, UICollectio
             cell.firstTypePokemonImageView = pokemonEvolution!.firstPokemonTypeImageView
             cell.secondTypePokemonImageView = pokemonEvolution!.secondPokemonTypeImageView
             
+            cell.firstPokemonNameLabel.text = "\(pokemonEvolution?.pokemonNames[0].capitalized ?? "")"
+            cell.secondPokemonNameLabel.text = "\(pokemonEvolution?.pokemonNames[1].capitalized ?? "")"
+            
             if pokemonEvolution?.fourthPokemonTypeImageView == nil {
                 cell.bottomView.isHidden = true
             } else {
+                cell.thirdPokemonNameLabel.text = "\(pokemonEvolution?.pokemonNames[1].capitalized ?? "")"
+                cell.fourthPokemonNameLabel.text = "\(pokemonEvolution?.pokemonNames[2].capitalized ?? "")"
                 cell.thirdTypePokemonImageView = pokemonEvolution!.thirdPokemonTypeImageView
                 cell.fourthTypePokemonImageView = pokemonEvolution!.fourthPokemonTypeImageView!
                 cell.secondLevelLabel.text = ("Lvl \(pokemonEvolution?.secondLevel ?? 1)")

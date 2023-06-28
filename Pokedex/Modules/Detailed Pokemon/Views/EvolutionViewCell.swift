@@ -77,6 +77,58 @@ final class EvolutionViewCell: UICollectionViewCell {
         return view
     }()
     
+    lazy var firstPokemonNameLabel: UILabel = {
+        let view = UILabel()
+        view.text = "Bulbasaur"
+        view.font = Constants.shared.detailedPokemonCardStatLabelFont
+        view.textColor = .black
+        return view
+    }()
+    
+    lazy var firstPokemonView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
+    lazy var secondPokemonNameLabel: UILabel = {
+        let view = UILabel()
+        view.text = "Ivysaur"
+        view.font = Constants.shared.detailedPokemonCardStatLabelFont
+        view.textColor = .black
+        return view
+    }()
+    
+    lazy var secondPokemonView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
+    lazy var thirdPokemonNameLabel: UILabel = {
+        let view = UILabel()
+        view.text = "Ivysaur"
+        view.font = Constants.shared.detailedPokemonCardStatLabelFont
+        view.textColor = .black
+        return view
+    }()
+    
+    lazy var thirdPokemonView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
+    lazy var fourthPokemonNameLabel: UILabel = {
+        let view = UILabel()
+        view.text = "Venusaur"
+        view.font = Constants.shared.detailedPokemonCardStatLabelFont
+        view.textColor = .black
+        return view
+    }()
+    
+    lazy var fourthPokemonView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -89,12 +141,24 @@ final class EvolutionViewCell: UICollectionViewCell {
             make.height.equalTo(100)
         }
         
-        topView.addSubview(firstTypePokemonImageView)
+        topView.addSubview(firstPokemonView)
+        firstPokemonView.snp.makeConstraints { make in
+            make.left.top.bottom.equalToSuperview()
+            make.width.equalTo(100)
+        }
+        
+        firstPokemonView.addSubview(firstTypePokemonImageView)
         firstTypePokemonImageView.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.left.equalToSuperview()
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview()
             make.height.equalTo(100)
             make.width.equalTo(100)
+        }
+        
+        firstPokemonView.addSubview(firstPokemonNameLabel)
+        firstPokemonNameLabel.snp.makeConstraints { make in
+            make.top.equalTo(firstTypePokemonImageView.snp.bottom).offset(10)
+            make.centerX.equalToSuperview()
         }
         
         topView.addSubview(firstArrowImageView)
@@ -109,12 +173,24 @@ final class EvolutionViewCell: UICollectionViewCell {
             make.centerX.equalToSuperview()
         }
         
-        topView.addSubview(secondTypePokemonImageView)
+        topView.addSubview(secondPokemonView)
+        secondPokemonView.snp.makeConstraints { make in
+            make.right.bottom.top.equalToSuperview()
+            make.width.equalTo(100)
+        }
+        
+        secondPokemonView.addSubview(secondTypePokemonImageView)
         secondTypePokemonImageView.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.right.equalToSuperview()
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview()
             make.height.equalTo(100)
             make.width.equalTo(100)
+        }
+        
+        secondPokemonView.addSubview(secondPokemonNameLabel)
+        secondPokemonNameLabel.snp.makeConstraints { make in
+            make.top.equalTo(secondTypePokemonImageView.snp.bottom).offset(10)
+            make.centerX.equalToSuperview()
         }
         
         addSubview(bottomView)
@@ -125,12 +201,24 @@ final class EvolutionViewCell: UICollectionViewCell {
             make.height.equalTo(100)
         }
         
-        bottomView.addSubview(thirdTypePokemonImageView)
+        bottomView.addSubview(thirdPokemonView)
+        thirdPokemonView.snp.makeConstraints { make in
+            make.top.left.bottom.equalToSuperview()
+            make.width.equalTo(100)
+        }
+        
+        thirdPokemonView.addSubview(thirdTypePokemonImageView)
         thirdTypePokemonImageView.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.left.equalToSuperview()
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview()
             make.height.equalTo(100)
             make.width.equalTo(100)
+        }
+        
+        thirdPokemonView.addSubview(thirdPokemonNameLabel)
+        thirdPokemonNameLabel.snp.makeConstraints { make in
+            make.top.equalTo(thirdTypePokemonImageView.snp.bottom).offset(10)
+            make.centerX.equalToSuperview()
         }
         
         bottomView.addSubview(secondArrowImageView)
@@ -145,12 +233,24 @@ final class EvolutionViewCell: UICollectionViewCell {
             make.centerX.equalToSuperview()
         }
         
-        bottomView.addSubview(fourthTypePokemonImageView)
+        bottomView.addSubview(fourthPokemonView)
+        fourthPokemonView.snp.makeConstraints { make in
+            make.top.right.bottom.equalToSuperview()
+            make.width.equalTo(100)
+        }
+        
+        fourthPokemonView.addSubview(fourthTypePokemonImageView)
         fourthTypePokemonImageView.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.right.equalToSuperview()
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview()
             make.height.equalTo(100)
             make.width.equalTo(100)
+        }
+        
+        fourthPokemonView.addSubview(fourthPokemonNameLabel)
+        fourthPokemonNameLabel.snp.makeConstraints { make in
+            make.top.equalTo(fourthTypePokemonImageView.snp.bottom).offset(10)
+            make.centerX.equalToSuperview()
         }
         
     }

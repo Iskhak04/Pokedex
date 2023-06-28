@@ -21,19 +21,24 @@ extension DetailedPokemonInteractor: DetailedPokemonInteractorProtocol {
             do {
                 var images: [UIImageView] = []
                                 
-                print(pokemonUrlString)
+                print("pokemonUrlString = \(pokemonUrlString)")
                 let pokemon = try await NetworkLayer.shared.fetchSinglePokemon(urlString: pokemonUrlString)
-                
+                print("test1")
                 let species = try await NetworkLayer.shared.fetchPokemonSpecies(urlString: pokemon.species.url)
-                
+                print("test2")
+                print("species.evolutionChain.url = \(species.evolutionChain.url)")
                 let evolution = try await NetworkLayer.shared.fetchPokemonEvolution(urlString: species.evolutionChain.url)
                 
+                print("test3")
                 guard let svgImageString = pokemon.sprites.other.dreamWorld.frontDefault else { return }
-                
+                print("test4")
                 let pokemon1Url = "https://pokeapi.co/api/v2/pokemon/\(evolution.chain.species.name)"
-                print(evolution.chain.species.name)
+
+                print("evolution.chain.species.name = \(evolution.chain.species.name)")
                 print(pokemon1Url)
+                print("pokemon1Url = \(pokemon1Url)")
                 let pokemon2Url = "https://pokeapi.co/api/v2/pokemon/\(evolution.chain.evolvesTo[0].species.name)"
+                print("hello")
                 if evolution.chain.evolvesTo[0].evolvesTo.count != 0 {
                     print("!=0")
                     let pokemon3Url = "https://pokeapi.co/api/v2/pokemon/\(evolution.chain.evolvesTo[0].evolvesTo[0]!.species.name)"
@@ -59,7 +64,7 @@ extension DetailedPokemonInteractor: DetailedPokemonInteractorProtocol {
                                     NetworkLayer.shared.downloadSvg(svgString: pokemon2.sprites.other.dreamWorld.frontDefault!, width: 100, height: 100) { imageV22 in
                                         
                                         NetworkLayer.shared.downloadSvg(svgString: svgImageString, width: 100, height: 100) { imageV11 in
-                                            self.presenter?.fetchedPokemon(pokemon: pokemon, svgImageView: images[0], pokemonSpecies: species, evolutionChain: EvolutionViewModel(firstPokemonTypeImageView: imageV1, secondPokemonTypeImageView: imageV2, thirdPokemonTypeImageView: imageV22, fourthPokemonTypeImageView: imageV3, firstLevel: firstLevel, secondLevel: secondLevel))
+                                            self.presenter?.fetchedPokemon(pokemon: pokemon, svgImageView: images[0], pokemonSpecies: species, evolutionChain: EvolutionViewModel(firstPokemonTypeImageView: imageV1, secondPokemonTypeImageView: imageV2, thirdPokemonTypeImageView: imageV22, fourthPokemonTypeImageView: imageV3, pokemonNames: [pokemon1.name, pokemon2.name, pokemon3.name], firstLevel: firstLevel, secondLevel: secondLevel))
                                         }
                                         
                                     }
@@ -70,7 +75,7 @@ extension DetailedPokemonInteractor: DetailedPokemonInteractorProtocol {
                         }
                     }
                 } else {
-
+                    print("==0")
                     let firstLevel = evolution.chain.evolvesTo[0].evolutionDetails[0]!.minLevel
                     
                     let pokemon1 = try await NetworkLayer.shared.fetchSinglePokemon(urlString: pokemon1Url)
@@ -88,7 +93,7 @@ extension DetailedPokemonInteractor: DetailedPokemonInteractorProtocol {
                                     NetworkLayer.shared.downloadSvg(svgString: pokemon2.sprites.other.dreamWorld.frontDefault!, width: 100, height: 100) { imageV22 in
                                         
                                         NetworkLayer.shared.downloadSvg(svgString: svgImageString, width: 100, height: 100) { imageV11 in
-                                            self.presenter?.fetchedPokemon(pokemon: pokemon, svgImageView: images[0], pokemonSpecies: species, evolutionChain: EvolutionViewModel(firstPokemonTypeImageView: imageV1, secondPokemonTypeImageView: imageV2, thirdPokemonTypeImageView: imageV22, fourthPokemonTypeImageView: nil, firstLevel: firstLevel, secondLevel: nil))
+                                            self.presenter?.fetchedPokemon(pokemon: pokemon, svgImageView: images[0], pokemonSpecies: species, evolutionChain: EvolutionViewModel(firstPokemonTypeImageView: imageV1, secondPokemonTypeImageView: imageV2, thirdPokemonTypeImageView: imageV22, fourthPokemonTypeImageView: nil, pokemonNames: [pokemon1.name, pokemon2.name], firstLevel: firstLevel, secondLevel: nil))
                                         }
                                         
                                     }

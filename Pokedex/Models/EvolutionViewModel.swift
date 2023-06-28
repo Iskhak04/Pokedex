@@ -12,6 +12,7 @@ struct EvolutionViewModel {
     var secondPokemonTypeImageView: UIImageView
     var thirdPokemonTypeImageView: UIImageView
     var fourthPokemonTypeImageView: UIImageView?
+    var pokemonNames: [String]
     var firstLevel: Int
     var secondLevel: Int?
 }
