@@ -19,7 +19,8 @@ final class DetailedPokemonViewController: UIViewController {
     var pokemonMainType: PokemonTypes = .bug
     var isFirstTimeOpened: Bool = false
     var pokemonEvolution: EvolutionViewModel?
-
+    var pokemonMoves: [MoveModel] = []
+    
     private lazy var detailedPokemonNameLabel: UILabel = {
         let view = UILabel()
         view.text = "Bulbasaur"
@@ -392,6 +393,7 @@ extension DetailedPokemonViewController: UICollectionViewDataSource, UICollectio
         case 3:
             let cell = detailedPokemonStatsCollectionVeiw.dequeueReusableCell(withReuseIdentifier: "MovesViewCell", for: indexPath) as! MovesViewCell
             cell.backgroundColor = .purple
+            print(pokemonMoves[0].name)
             returnCell = cell
         default:
             ()
@@ -447,11 +449,12 @@ extension DetailedPokemonViewController: UICollectionViewDataSource, UICollectio
 
 extension DetailedPokemonViewController: DetailedPokemonViewProtocol {
     
-    func fetchedPokemon(pokemon: PokemonModel, svgImageView: UIImageView, pokemonSpecies: PokemonSpeciesModel, evolutionChain: EvolutionViewModel) {
+    func fetchedPokemon(pokemon: PokemonModel, svgImageView: UIImageView, pokemonSpecies: PokemonSpeciesModel, evolutionChain: EvolutionViewModel, moves: [MoveModel]) {
         
         self.pokemonSpecies = pokemonSpecies
         self.pokemonEvolution = evolutionChain
         self.pokemon = pokemon
+        self.pokemonMoves = moves
         print(pokemon.name)
         DispatchQueue.main.async {
             self.detailedPokemonStatsCollectionVeiw.reloadData()
